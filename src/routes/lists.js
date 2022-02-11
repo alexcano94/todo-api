@@ -13,9 +13,10 @@ router.get('/', async (req, res, next) => {
   res.json(lists);
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   const { id } = req.params;
-  res.json();
+  const list = await ServiceList.read(id);
+  res.json(list);
 });
 
 router.post('/', validateCreateList, async (req, res, next) => {
@@ -24,20 +25,24 @@ router.post('/', validateCreateList, async (req, res, next) => {
   res.status(201).json();
 });
 
-router.put('/:id', validateUpdateList, (req, res, next) => {
-  const data = req.body;
+router.put('/:id', validateUpdateList, async (req, res, next) => {
+  const document = req.body;
   const { id } = req.params;
-  res.json()
+  const list = await ServiceList.update(id, document);
+  res.json(list);
 });
 
-router.patch('/:id', validatePatchList, (req, res, next) => {
-  const data = req.body;
+router.patch('/:id', validatePatchList, async (req, res, next) => {
+  const document = req.body;
   const { id } = req.params;
-  res.json()
+  const list = await ServiceList.update(id, document);
+  res.json(list);
 });
 
-router.delete('/:id', (req, res, next) => {
-  res.json()
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const deleted = await ServiceList.remove(id);
+  res.json(deleted);
 });
 
 module.exports = router;
