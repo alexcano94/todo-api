@@ -18,7 +18,6 @@ const read = async (id) => {
 }
 
 const update = async (id, document) => {
-
   await checker.throwErrorIfDocumentDoesNotExist({ id, model: Todo });
   const todo = await Todo.findById(id);
   const { idList } = document;

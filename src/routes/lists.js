@@ -30,7 +30,8 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', validateCreateList, async (req, res, next) => {
   try {
     const document = req.body;
-    await ServiceList.create(document);
+    const { userId } = req;
+    await ServiceList.create({ ...document, user: userId });
     res.status(201).json();
   } catch (err) {
     next(err);

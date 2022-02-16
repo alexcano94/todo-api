@@ -1,9 +1,11 @@
-const { Panel } = require('./../models/mongoose');
+const { Panel, User } = require('./../models/mongoose');
 const checker = require('./errors');
 const ListService = require('./ListService');
 
 const create = async (document) => {
-  return await new Panel(document).save();
+  const panel = new Panel(document).save();
+  await User.findByIdAndUpdate(panel.user, { $push: { panels: panel._id } });
+  return panel;
 }
 
 const readAll = async () => {
@@ -26,7 +28,7 @@ const update = async (id, document) => {
 const remove = async (id) => {
   await checker.throwErrorIfDocumentDoesNotExist({ id, model: Panel });
   const { lists } = await Panel.findById(id).toObject();
-  for(let idList of lists) {
+  for (let idList of lists) {
     await ListService.remove(idList);
   }
   const result = await Panel.findByIdAndDelete(id);

@@ -30,8 +30,9 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', validateCreatePanel, async (req, res, next) => {
   const document = req.body;
+  const { userId } = req;
   try {
-    await ServicePanel.create(document);
+    await ServicePanel.create({ ...document, user: userId });
     res.status(201).json();
   } catch (err) {
     next(err);

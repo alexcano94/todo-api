@@ -2,10 +2,14 @@ const { List, Panel, Todo } = require('./../models/mongoose');
 const checker = require('./errors');
 
 const create = async (document) => {
-  await checker.throwErrorIfRelatedDoesNotExist({ id, model: Panel });
-  const list = await new List(document).save();
-  await Panel.findByIdAndUpdate(list.idPanel, { $push: { lists: list._id } });
-  return list;
+  try {
+    await checker.throwErrorIfRelatedDoesNotExist({ id, model: Panel });
+    const list = await new List(document).save();
+    await Panel.findByIdAndUpdate(list.idPanel, { $push: { lists: list._id } });
+    return list;
+  } catch (err) {
+    throw err
+  }
 }
 
 const readAll = async () => {
